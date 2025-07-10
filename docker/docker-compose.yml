@@ -11,6 +11,14 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
+    # SMTP Configuration
+    AIRFLOW__SMTP__SMTP_HOST: smtp.gmail.com
+    AIRFLOW__SMTP__SMTP_STARTTLS: 'true'
+    AIRFLOW__SMTP__SMTP_SSL: 'false'
+    AIRFLOW__SMTP__SMTP_USER: ${SMTP_USER:-your-email@gmail.com}
+    AIRFLOW__SMTP__SMTP_PASSWORD: ${SMTP_PASSWORD:-your-app-password}
+    AIRFLOW__SMTP__SMTP_PORT: 587
+    AIRFLOW__SMTP__SMTP_MAIL_FROM: ${SMTP_USER:-your-email@gmail.com}
     _PIP_ADDITIONAL_REQUIREMENTS: psycopg2-binary pandas sqlalchemy
   volumes:
     - ../airflow/dags:/opt/airflow/dags
@@ -111,7 +119,7 @@ services:
           --firstname Admin \
           --lastname User \
           --role Admin \
-          --email admin@example.com \
+          --email volh@smartosc.com \
           --password admin
     environment:
       <<: *airflow-common-env

@@ -250,6 +250,16 @@ Nếu gặp vấn đề trong quá trình thực hành, hãy:
 
 ---
 
+## How to run gerage data
+```py
+cd ~/Desktop/Lotus
+python3 -m venv venv
+source venv/bin/activate
+pip install psycopg2-binary faker
+python scripts/generate_sample_data.py
+```
+
+
 **Happy Learning! 🚀**
 
 *Bài tập này giúp bạn hiểu được end-to-end data pipeline trong thực tế và cách các công cụ làm việc cùng nhau.*

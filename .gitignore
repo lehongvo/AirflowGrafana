@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.env
+.venv
+
+# Airflow
+airflow/logs/*
+airflow/*.log
+airflow/*.pid
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow.db
+airflow-webserver.pid
+standalone_admin_password.txt
+airflow.cfg
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Data files
+*.csv
+*.xls
+*.xlsx
+*.db
+*.sqlite3
+data/source/*
+data/target/*
+!data/source/.gitkeep
+!data/target/.gitkeep
+
+# Logs
+logs/
+*.log
+log.txt
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Grafana
+grafana/data/
+
+# Custom project files
+config.ini
+secrets.yaml
+.env*
+!.env.example 

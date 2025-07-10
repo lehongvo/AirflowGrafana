@@ -11,8 +11,10 @@ default_args = {
     'owner': 'data_team',
     'depends_on_past': False,
     'start_date': datetime(2024, 1, 1),
-    'email_on_failure': False,
-    'email_on_retry': False,
+    'email': ['lehongtien19x@gmail.com'],  
+    'email_on_failure': True,
+    'email_on_retry': True,
+    'email_on_success': True, 
     'retries': 3,
     'retry_delay': timedelta(minutes=1),
 }
@@ -233,6 +235,60 @@ def create_daily_summary():
         logging.error(f"Lỗi trong create_daily_summary: {str(e)}")
         raise
 
+def check_order_milestone():
+    """Kiểm tra số lượng orders và gửi notification khi đạt 100 orders"""
+    logging.info("Kiểm tra milestone orders...")
+    
+    try:
+        postgres_hook = PostgresHook(postgres_conn_id='postgres_data')
+        
+        # Đếm tổng số orders
+        total_orders_query = "SELECT COUNT(*) FROM source_data.orders"
+        total_orders = postgres_hook.get_first(total_orders_query)[0]
+        
+        # Đếm orders hôm nay
+        today_orders_query = """
+        SELECT COUNT(*) FROM source_data.orders 
+        WHERE DATE(order_date) = CURRENT_DATE
+        """
+        today_orders = postgres_hook.get_first(today_orders_query)[0]
+        
+        logging.info(f"Tổng số orders: {total_orders}")
+        logging.info(f"Orders hôm nay: {today_orders}")
+        
+        # Kiểm tra milestone 100 orders
+        if total_orders > 0 and total_orders % 100 == 0:
+            logging.info(f"🎉 MILESTONE REACHED: {total_orders} orders!")
+            
+            # Tạo thông báo chi tiết
+            milestone_info = f"""
+            🎉 CHÚC MỪNG! ĐÃ ĐẠT MILESTONE {total_orders} ORDERS!
+            
+            📊 Thống kê:
+            - Tổng số orders: {total_orders}
+            - Orders hôm nay: {today_orders}
+            - Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+            
+            Hệ thống ETL đang hoạt động tốt! 🚀
+            """
+            
+            logging.info(milestone_info)
+            
+            # Raise exception để trigger email notification
+            raise Exception(f"MILESTONE NOTIFICATION: Đã đạt {total_orders} orders! 🎉")
+        
+        elif today_orders >= 10:  # Bonus: Thông báo khi có nhiều orders trong ngày
+            logging.info(f"📈 Có {today_orders} orders hôm nay - hoạt động tích cực!")
+            
+    except Exception as e:
+        if "MILESTONE NOTIFICATION" in str(e):
+            # Đây là notification milestone, không phải lỗi thật
+            logging.info("Đã gửi milestone notification")
+            raise  # Raise lại để trigger email
+        else:
+            logging.error(f"Lỗi trong check_order_milestone: {str(e)}")
+            raise
+
 # Define tasks
 extract_customers_task = PythonOperator(
     task_id='extract_transform_customers',
@@ -256,6 +312,15 @@ create_summary_task = PythonOperator(
     task_id='create_daily_summary',
     python_callable=create_daily_summary,
     dag=dag,
+)
+
+check_milestone_task = PythonOperator(
+    task_id='check_order_milestone',
+    python_callable=check_order_milestone,
+    dag=dag,
+    # Cấu hình email riêng cho milestone notifications
+    email_on_failure=True,  # Sẽ gửi email khi có milestone
+    email_on_retry=False,   # Không gửi email khi retry
 )
 
 # Data quality check task
@@ -292,5 +357,5 @@ data_quality_check = PostgresOperator(
     dag=dag,
 )
 
-# Task dependencies - Customers và Products chạy song song, sau đó Sales, rồi Summary và Quality Check
-[extract_customers_task, extract_products_task] >> extract_sales_task >> create_summary_task >> data_quality_check 
+# Task dependencies - Customers và Products chạy song song, sau đó Sales, rồi Summary, Quality Check và Milestone Check
+[extract_customers_task, extract_products_task] >> extract_sales_task >> create_summary_task >> [data_quality_check, check_milestone_task] 

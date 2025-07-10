@@ -247,7 +247,7 @@ def main():
     
     # Generate data với số lượng hợp lý
     print("📊 Generating customers...")
-    customers = generate_customers(50)  # Giảm từ 10000 xuống 50
+    customers = generate_customers(30)  # Giảm từ 10000 xuống 50
     
     print("📦 Generating products...")
     products = generate_products(100)  # Giảm từ 10000 xuống 100

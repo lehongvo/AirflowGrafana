@@ -1,0 +1,68 @@
+[2025-07-09T10:36:19.632+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.data_quality_check scheduled__2025-07-09T10:35:15.291024+00:00 [queued]>
+[2025-07-09T10:36:19.637+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.data_quality_check scheduled__2025-07-09T10:35:15.291024+00:00 [queued]>
+[2025-07-09T10:36:19.637+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 4
+[2025-07-09T10:36:19.646+0000] {taskinstance.py:1382} INFO - Executing <Task(PostgresOperator): data_quality_check> on 2025-07-09 10:35:15.291024+00:00
+[2025-07-09T10:36:19.649+0000] {standard_task_runner.py:57} INFO - Started process 3517 to run task
+[2025-07-09T10:36:19.651+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'ecommerce_etl_pipeline', 'data_quality_check', 'scheduled__2025-07-09T10:35:15.291024+00:00', '--job-id', '512', '--raw', '--subdir', 'DAGS_FOLDER/ecommerce_etl_dag.py', '--cfg-path', '/tmp/tmp8d9wpx7f']
+[2025-07-09T10:36:19.654+0000] {standard_task_runner.py:85} INFO - Job 512: Subtask data_quality_check
+[2025-07-09T10:36:19.772+0000] {task_command.py:415} INFO - Running <TaskInstance: ecommerce_etl_pipeline.data_quality_check scheduled__2025-07-09T10:35:15.291024+00:00 [running]> on host fc060bb3c09b
+[2025-07-09T10:36:19.810+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='ecommerce_etl_pipeline' AIRFLOW_CTX_TASK_ID='data_quality_check' AIRFLOW_CTX_EXECUTION_DATE='2025-07-09T10:35:15.291024+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-07-09T10:35:15.291024+00:00'
+[2025-07-09T10:36:19.810+0000] {sql.py:274} INFO - Executing: 
+    DO $$
+    DECLARE
+        customer_count INTEGER;
+        product_count INTEGER;
+        sales_count INTEGER;
+    BEGIN
+        SELECT COUNT(*) INTO customer_count FROM target_data.dim_customers;
+        SELECT COUNT(*) INTO product_count FROM target_data.dim_products;
+        SELECT COUNT(*) INTO sales_count FROM target_data.fact_sales;
+        
+        RAISE NOTICE 'Data quality check: % customers, % products, % sales', 
+                     customer_count, product_count, sales_count;
+                     
+        IF customer_count = 0 THEN
+            RAISE WARNING 'No customers in dim_customers';
+        END IF;
+        
+        IF product_count = 0 THEN
+            RAISE WARNING 'No products in dim_products';
+        END IF;
+        
+        IF sales_count = 0 THEN
+            RAISE WARNING 'No sales in fact_sales';
+        END IF;
+    END $$;
+    
+[2025-07-09T10:36:19.816+0000] {base.py:73} INFO - Using connection ID 'postgres_data' for task execution.
+[2025-07-09T10:36:19.820+0000] {base.py:73} INFO - Using connection ID 'postgres_data' for task execution.
+[2025-07-09T10:36:19.823+0000] {sql.py:418} INFO - Running statement: 
+    DO $$
+    DECLARE
+        customer_count INTEGER;
+        product_count INTEGER;
+        sales_count INTEGER;
+    BEGIN
+        SELECT COUNT(*) INTO customer_count FROM target_data.dim_customers;
+        SELECT COUNT(*) INTO product_count FROM target_data.dim_products;
+        SELECT COUNT(*) INTO sales_count FROM target_data.fact_sales;
+        
+        RAISE NOTICE 'Data quality check: % customers, % products, % sales', 
+                     customer_count, product_count, sales_count;
+                     
+        IF customer_count = 0 THEN
+            RAISE WARNING 'No customers in dim_customers';
+        END IF;
+        
+        IF product_count = 0 THEN
+            RAISE WARNING 'No products in dim_products';
+        END IF;
+        
+        IF sales_count = 0 THEN
+            RAISE WARNING 'No sales in fact_sales';
+        END IF;
+    END $$;
+    , parameters: None
+[2025-07-09T10:36:19.834+0000] {taskinstance.py:1400} INFO - Marking task as SUCCESS. dag_id=ecommerce_etl_pipeline, task_id=data_quality_check, execution_date=20250709T103515, start_date=20250709T103619, end_date=20250709T103619
+[2025-07-09T10:36:19.876+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-07-09T10:36:19.887+0000] {taskinstance.py:2784} INFO - 0 downstream tasks scheduled from follow-on schedule check

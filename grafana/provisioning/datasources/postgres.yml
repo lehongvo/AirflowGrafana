@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: PostgreSQL-Data
+    type: postgres
+    access: proxy
+    url: postgres_data:5432
+    database: ecommerce
+    user: datauser
+    secureJsonData:
+      password: datapass
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1300
+      timescaledb: false
+    isDefault: true
+    editable: true 

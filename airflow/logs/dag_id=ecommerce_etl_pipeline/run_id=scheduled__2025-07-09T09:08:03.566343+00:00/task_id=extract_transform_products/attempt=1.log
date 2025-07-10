@@ -1,0 +1,34 @@
+[2025-07-09T09:09:07.013+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.extract_transform_products scheduled__2025-07-09T09:08:03.566343+00:00 [queued]>
+[2025-07-09T09:09:07.024+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.extract_transform_products scheduled__2025-07-09T09:08:03.566343+00:00 [queued]>
+[2025-07-09T09:09:07.025+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 4
+[2025-07-09T09:09:07.047+0000] {taskinstance.py:1382} INFO - Executing <Task(PythonOperator): extract_transform_products> on 2025-07-09 09:08:03.566343+00:00
+[2025-07-09T09:09:07.056+0000] {standard_task_runner.py:57} INFO - Started process 1207 to run task
+[2025-07-09T09:09:07.059+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'ecommerce_etl_pipeline', 'extract_transform_products', 'scheduled__2025-07-09T09:08:03.566343+00:00', '--job-id', '195', '--raw', '--subdir', 'DAGS_FOLDER/ecommerce_etl_dag.py', '--cfg-path', '/tmp/tmp8z6tz75l']
+[2025-07-09T09:09:07.070+0000] {standard_task_runner.py:85} INFO - Job 195: Subtask extract_transform_products
+[2025-07-09T09:09:07.403+0000] {task_command.py:415} INFO - Running <TaskInstance: ecommerce_etl_pipeline.extract_transform_products scheduled__2025-07-09T09:08:03.566343+00:00 [running]> on host a30f004cea1f
+[2025-07-09T09:09:07.610+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='ecommerce_etl_pipeline' AIRFLOW_CTX_TASK_ID='extract_transform_products' AIRFLOW_CTX_EXECUTION_DATE='2025-07-09T09:08:03.566343+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-07-09T09:08:03.566343+00:00'
+[2025-07-09T09:09:07.616+0000] {ecommerce_etl_dag.py:93} INFO - Bắt đầu extract products data...
+[2025-07-09T09:09:07.645+0000] {ecommerce_etl_dag.py:146} ERROR - Lỗi trong extract_and_transform_products: The conn_id `postgres_data` isn't defined
+[2025-07-09T09:09:07.683+0000] {taskinstance.py:1943} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.9/site-packages/airflow/operators/python.py", line 192, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.9/site-packages/airflow/operators/python.py", line 209, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ecommerce_etl_dag.py", line 99, in extract_and_transform_products
+    postgres_hook.run("TRUNCATE TABLE target_data.dim_products CASCADE;")
+  File "/home/airflow/.local/lib/python3.9/site-packages/airflow/providers/common/sql/hooks/sql.py", line 385, in run
+    with closing(self.get_conn()) as conn:
+  File "/home/airflow/.local/lib/python3.9/site-packages/airflow/providers/postgres/hooks/postgres.py", line 124, in get_conn
+    conn = deepcopy(self.connection or self.get_connection(conn_id))
+  File "/home/airflow/.local/lib/python3.9/site-packages/airflow/hooks/base.py", line 72, in get_connection
+    conn = Connection.get_connection_from_secrets(conn_id)
+  File "/home/airflow/.local/lib/python3.9/site-packages/airflow/models/connection.py", line 477, in get_connection_from_secrets
+    raise AirflowNotFoundException(f"The conn_id `{conn_id}` isn't defined")
+airflow.exceptions.AirflowNotFoundException: The conn_id `postgres_data` isn't defined
+[2025-07-09T09:09:07.692+0000] {taskinstance.py:1400} INFO - Marking task as UP_FOR_RETRY. dag_id=ecommerce_etl_pipeline, task_id=extract_transform_products, execution_date=20250709T090803, start_date=20250709T090907, end_date=20250709T090907
+[2025-07-09T09:09:07.728+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 195 for task extract_transform_products (The conn_id `postgres_data` isn't defined; 1207)
+[2025-07-09T09:09:07.793+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2025-07-09T09:09:08.389+0000] {local_task_job_runner.py:115} ERROR - Received SIGTERM. Terminating subprocesses
+[2025-07-09T09:09:08.393+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 143
+[2025-07-09T09:09:08.448+0000] {taskinstance.py:2784} INFO - 0 downstream tasks scheduled from follow-on schedule check

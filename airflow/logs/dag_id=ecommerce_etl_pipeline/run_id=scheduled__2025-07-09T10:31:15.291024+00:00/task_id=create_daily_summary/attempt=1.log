@@ -1,0 +1,32 @@
+[2025-07-09T10:32:19.727+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.create_daily_summary scheduled__2025-07-09T10:31:15.291024+00:00 [queued]>
+[2025-07-09T10:32:19.733+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.create_daily_summary scheduled__2025-07-09T10:31:15.291024+00:00 [queued]>
+[2025-07-09T10:32:19.734+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 4
+[2025-07-09T10:32:19.743+0000] {taskinstance.py:1382} INFO - Executing <Task(PythonOperator): create_daily_summary> on 2025-07-09 10:31:15.291024+00:00
+[2025-07-09T10:32:19.746+0000] {standard_task_runner.py:57} INFO - Started process 3356 to run task
+[2025-07-09T10:32:19.748+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'ecommerce_etl_pipeline', 'create_daily_summary', 'scheduled__2025-07-09T10:31:15.291024+00:00', '--job-id', '491', '--raw', '--subdir', 'DAGS_FOLDER/ecommerce_etl_dag.py', '--cfg-path', '/tmp/tmp4yiigcjz']
+[2025-07-09T10:32:19.750+0000] {standard_task_runner.py:85} INFO - Job 491: Subtask create_daily_summary
+[2025-07-09T10:32:19.871+0000] {task_command.py:415} INFO - Running <TaskInstance: ecommerce_etl_pipeline.create_daily_summary scheduled__2025-07-09T10:31:15.291024+00:00 [running]> on host fc060bb3c09b
+[2025-07-09T10:32:19.907+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='ecommerce_etl_pipeline' AIRFLOW_CTX_TASK_ID='create_daily_summary' AIRFLOW_CTX_EXECUTION_DATE='2025-07-09T10:31:15.291024+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-07-09T10:31:15.291024+00:00'
+[2025-07-09T10:32:19.908+0000] {ecommerce_etl_dag.py:207} INFO - Tạo daily sales summary...
+[2025-07-09T10:32:19.912+0000] {base.py:73} INFO - Using connection ID 'postgres_data' for task execution.
+[2025-07-09T10:32:19.914+0000] {sql.py:418} INFO - Running statement: TRUNCATE TABLE target_data.daily_sales_summary;, parameters: None
+[2025-07-09T10:32:19.921+0000] {base.py:73} INFO - Using connection ID 'postgres_data' for task execution.
+[2025-07-09T10:32:19.924+0000] {sql.py:418} INFO - Running statement: 
+        INSERT INTO target_data.daily_sales_summary 
+        (summary_date, total_orders, total_revenue, total_customers, avg_order_value, top_selling_category)
+        SELECT 
+            fs.sale_date,
+            COUNT(DISTINCT fs.order_id) as total_orders,
+            SUM(fs.total_amount) as total_revenue,
+            COUNT(DISTINCT fs.customer_key) as total_customers,
+            AVG(fs.total_amount) as avg_order_value,
+            'Electronics' as top_selling_category  -- Simplified for now
+        FROM target_data.fact_sales fs
+        GROUP BY fs.sale_date
+        , parameters: None
+[2025-07-09T10:32:19.926+0000] {sql.py:427} INFO - Rows affected: 89
+[2025-07-09T10:32:19.927+0000] {ecommerce_etl_dag.py:230} INFO - Daily summary đã được tạo/cập nhật
+[2025-07-09T10:32:19.927+0000] {python.py:194} INFO - Done. Returned value was: None
+[2025-07-09T10:32:19.933+0000] {taskinstance.py:1400} INFO - Marking task as SUCCESS. dag_id=ecommerce_etl_pipeline, task_id=create_daily_summary, execution_date=20250709T103115, start_date=20250709T103219, end_date=20250709T103219
+[2025-07-09T10:32:19.968+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-07-09T10:32:19.980+0000] {taskinstance.py:2784} INFO - 1 downstream tasks scheduled from follow-on schedule check

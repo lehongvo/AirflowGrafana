@@ -1,0 +1,21 @@
+[2025-07-09T09:20:16.516+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.extract_transform_products scheduled__2025-07-09T09:19:14.875527+00:00 [queued]>
+[2025-07-09T09:20:16.523+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ecommerce_etl_pipeline.extract_transform_products scheduled__2025-07-09T09:19:14.875527+00:00 [queued]>
+[2025-07-09T09:20:16.524+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 4
+[2025-07-09T09:20:16.533+0000] {taskinstance.py:1382} INFO - Executing <Task(PythonOperator): extract_transform_products> on 2025-07-09 09:19:14.875527+00:00
+[2025-07-09T09:20:16.537+0000] {standard_task_runner.py:57} INFO - Started process 425 to run task
+[2025-07-09T09:20:16.539+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'ecommerce_etl_pipeline', 'extract_transform_products', 'scheduled__2025-07-09T09:19:14.875527+00:00', '--job-id', '129', '--raw', '--subdir', 'DAGS_FOLDER/ecommerce_etl_dag.py', '--cfg-path', '/tmp/tmpgwwfo7_2']
+[2025-07-09T09:20:16.541+0000] {standard_task_runner.py:85} INFO - Job 129: Subtask extract_transform_products
+[2025-07-09T09:20:16.570+0000] {task_command.py:415} INFO - Running <TaskInstance: ecommerce_etl_pipeline.extract_transform_products scheduled__2025-07-09T09:19:14.875527+00:00 [running]> on host fc060bb3c09b
+[2025-07-09T09:20:16.618+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='ecommerce_etl_pipeline' AIRFLOW_CTX_TASK_ID='extract_transform_products' AIRFLOW_CTX_EXECUTION_DATE='2025-07-09T09:19:14.875527+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-07-09T09:19:14.875527+00:00'
+[2025-07-09T09:20:16.619+0000] {ecommerce_etl_dag.py:93} INFO - Bắt đầu extract products data...
+[2025-07-09T09:20:16.771+0000] {base.py:73} INFO - Using connection ID 'postgres_data' for task execution.
+[2025-07-09T09:20:16.773+0000] {sql.py:418} INFO - Running statement: TRUNCATE TABLE target_data.dim_products CASCADE;, parameters: None
+[2025-07-09T09:20:16.784+0000] {base.py:73} INFO - Using connection ID 'postgres_data' for task execution.
+[2025-07-09T09:20:16.791+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.9/site-packages/***/providers/common/sql/hooks/sql.py:219 UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+[2025-07-09T09:20:16.793+0000] {ecommerce_etl_dag.py:122} INFO - Extracted 8 products
+[2025-07-09T09:20:16.797+0000] {base.py:73} INFO - Using connection ID 'postgres_data' for task execution.
+[2025-07-09T09:20:16.801+0000] {ecommerce_etl_dag.py:141} INFO - Loaded 8 products vào dim_products
+[2025-07-09T09:20:16.801+0000] {python.py:194} INFO - Done. Returned value was: None
+[2025-07-09T09:20:16.806+0000] {taskinstance.py:1400} INFO - Marking task as SUCCESS. dag_id=ecommerce_etl_pipeline, task_id=extract_transform_products, execution_date=20250709T091914, start_date=20250709T092016, end_date=20250709T092016
+[2025-07-09T09:20:16.842+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-07-09T09:20:16.856+0000] {taskinstance.py:2784} INFO - 0 downstream tasks scheduled from follow-on schedule check
